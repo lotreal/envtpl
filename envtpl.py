@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
 envtpl - jinja2 template rendering with shell environment variables
 Copyright (C) 2014  Andreas Jansson
@@ -23,14 +25,18 @@ import jinja2
 
 EXTENSION = '.tpl'
 
+def do_split(value):
+    """Enforce HTML escaping.  This will probably double escape variables."""
+    return ', '.join(map(lambda x: '"%s"' % x, value.split(':')))
+
 def main():
     parser = argparse.ArgumentParser(
         description='jinja2 template rendering with shell environment variables'
     )
-    parser.add_argument('input_file', 
+    parser.add_argument('input_file',
                         nargs='?', help='Input filename. Defaults to stdin.'
     )
-    parser.add_argument('-o', '--output-file', 
+    parser.add_argument('-o', '--output-file',
                         help='Output filename. If none is given, and the input file ends '
                         'with "%s", the output filename is the same as the input '
                         'filename, sans the %s extension. Otherwise, defaults to stdout.' %
@@ -78,6 +84,7 @@ def process_file(input_filename, output_filename, variables, die_on_missing_vari
 
         loader = jinja2.FileSystemLoader(os.path.dirname(input_filename))
         env = jinja2.Environment(loader=loader, undefined=undefined)
+        env.filters['split'] = do_split
         relpath = os.path.relpath(input_filename, os.path.dirname(input_filename))
 
         try:

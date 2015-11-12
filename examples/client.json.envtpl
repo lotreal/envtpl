@@ -1,0 +1,14 @@
+{
+  "data_dir": "/var/lib/consul",
+  "datacenter": "{{ X_CONSUL_DC | default("nine") }}",
+  "domain": "{{ X_CONSUL_DOMAIN | default("dm") }}",
+  "leave_on_terminate": true,
+  "log_level": "WARN",
+  "encrypt": "Pr5+VPSnsa0UwgbY0ZTYog==",
+  "start_join": [{{ X_CONSUL_SERVER | default("server.consul.local") | split }}],
+  "service": {
+    "name": "{{ X_SERVICE_NAME | default("web") }}",
+    "port": {{ X_SERVICE_PORT | default("80") }},
+    "tags": [{{ X_SERVICE_TAG | split }}]
+  }
+}

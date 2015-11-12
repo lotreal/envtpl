@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+export X_CONSUL_SERVER=10.0.0.2:10.0.0.3
+export X_SERVICE_TAG=api:maokai
+../envtpl.py --keep-template client.json.envtpl -o client.json
+cat client.json
